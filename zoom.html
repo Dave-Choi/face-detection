@@ -30,6 +30,36 @@ body {
 	background: black;
 	-webkit-transform: scale(-1, 1);
 }
+
+#zoomText{
+	-webkit-transition: all 2s ease-in-out;
+}
+
+.verySmall{
+	-webkit-transition: all 2s ease-in-out;
+	font-size: .6em;
+}
+
+.small{
+	-webkit-transition: all 2s ease-in-out;
+	font-size: .8em;
+}
+
+.medium{
+	-webkit-transition: all 2s ease-in-out;
+	font-size: 1em;
+}
+
+.large{
+	-webkit-transition: all 2s ease-in-out;
+	font-size: 1.5em;
+}
+
+.veryLarge{
+	-webkit-transition: all 2s ease-in-out;
+	font-size: 2em;
+}
+
 		</style>
 	</head>
 	<body>
@@ -37,11 +67,11 @@ body {
 		<p id="debug"></p>
 		<div id="zoomText">
 			<p>Lorem ipsum dolor sit amet, consectetur adip*isicing elit, sed do eiusmod *tempor incididunt ut labore et dolore magna aliqua.</p>
-			<p>Lorem ipsum dolor sit amet, consectetur adip*isicing elit, sed do eiusmod *tempor incididunt ut labore et dolore magna aliqua.</p>
+			<p>By varying the distance of your face to your camera, the text in these paragraphs should be resizing automatically.  When you're close, it'll be smaller, and when you're far, it'll be larger.</p>
 
-			<p>Lorem ipsum dolor sit amet, consectetur adip*isicing elit, sed do eiusmod *tempor incididunt ut labore et dolore magna aliqua.</p>
-			<p>Lorem ipsum dolor sit amet, consectetur adip*isicing elit, sed do eiusmod *tempor incididunt ut labore et dolore magna aliqua.</p>
-			<p>Lorem ipsum dolor sit amet, consectetur adip*isicing elit, sed do eiusmod *tempor incididunt ut labore et dolore magna aliqua.</p>
+			<p>I'm not sure if this is really the right behavior.  It could be that you're trying to get in close because you're having trouble reading from a distance, in which case you'd want the opposite behavior.</p>
+			<p>I'm also not sure what the appropriate level of granularity is.  I'd imagine that around 5 or so different levels is plenty, but the user should probably be able to configure that sort of thing.</p>
+			<p>I'm using a 2 second animation to move between different zoom levels right now.  It seems choppy, but it might just be because my computer's pretty old, face detection is fairly processor intensive, and I'm testing with 2 zoom level buckets, which are very different in size.</p>
 		</div>
 		<canvas id="output"></canvas>
 		<script src="ccv.js"></script>
@@ -129,7 +159,7 @@ var App = {
 		comp = ccv.detect_objects(App.ccv = App.ccv || {
 			canvas: App.backCanvas,
 			cascade: cascade,
-			interval: 10,
+			interval: 5,
 			min_neighbors: 1
 		});
 
@@ -140,24 +170,30 @@ var App = {
 			var faceWidth = App.comp[0].width;
 			//45 width seems to be about standard distance for my face -- About 21 inches from my screen, estimated 2.5" pupil distance
 			//Up to about 100 if I get very close, down to about 24.5 if I'm leaning way back.
-			var widthFactor = Math.floor(faceWidth/5); //Simplify things a little, keep it from spazzing out.  Range is now about 5-20
-			var zoomFactor = 1/(widthFactor/20);
-			document.getElementById("debug").innerHTML = zoomFactor;
+			if(faceWidth < 25){
+				document.getElementById("zoomText").className = "veryLarge";
+			}
+			else if(faceWidth < 35){
+				document.getElementById("zoomText").className = "large";
+			}
+			else if(faceWidth < 55){
+				document.getElementById("zoomText").className = "medium";
+			}
+			else if(faceWidth < 75){
+				document.getElementById("zoomText").className = "small";
+			}
+			else{
+				document.getElementById("zoomText").className = "verySmall";
+			}
 
-			document.getElementById("zoomText").style.fontSize = zoomFactor + "em";
+
 		}
 	}
 };
 
-App.glasses = new Image();
-App.glasses.src = 'glasses.png';
-
 App.init = function() {
 	App.video = document.createElement('video');
 	App.backCanvas = document.createElement('canvas');
-	App.canvas = document.querySelector('#output');
-	App.canvas.style.display = 'none';
-	App.context = App.canvas.getContext('2d');
 	App.info = document.querySelector('#info');
 	
 	navigator.getUserMedia_ = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
