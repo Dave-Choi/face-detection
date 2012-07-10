@@ -12,7 +12,6 @@ body {
 	width: 100%;
 	height: 100%;
 	margin: 0;
-	text-align: center;
 	background-color: #111;
 }
 
@@ -27,37 +26,39 @@ body {
 #output {
 	width: auto;
 	height: 100%;
-	background: black;
+	background: red;
 	-webkit-transform: scale(-1, 1);
+	display: none;
 }
 
 #zoomText{
-	-webkit-transition: all 2s ease-in-out;
+	max-width: 500px;
+	margin: auto;
 }
 
 .verySmall{
-	-webkit-transition: all 2s ease-in-out;
-	font-size: .6em;
+	-webkit-transition: all 1s ease-in-out;
+	-webkit-transform:scale(.6);
 }
 
 .small{
-	-webkit-transition: all 2s ease-in-out;
-	font-size: .8em;
+	-webkit-transition: all 1s ease-in-out;
+	-webkit-transform:scale(.8);
 }
 
 .medium{
-	-webkit-transition: all 2s ease-in-out;
-	font-size: 1em;
+	-webkit-transition: all 1s ease-in-out;
+	-webkit-transform:scale(1);
 }
 
 .large{
-	-webkit-transition: all 2s ease-in-out;
-	font-size: 1.5em;
+	-webkit-transition: all 1s ease-in-out;
+	-webkit-transform:scale(1.5);
 }
 
 .veryLarge{
-	-webkit-transition: all 2s ease-in-out;
-	font-size: 2em;
+	-webkit-transition: all 1s ease-in-out;
+	-webkit-transform:scale(2);
 }
 
 		</style>
@@ -67,11 +68,16 @@ body {
 		<p id="debug"></p>
 		<div id="zoomText">
 			<p>Lorem ipsum dolor sit amet, consectetur adip*isicing elit, sed do eiusmod *tempor incididunt ut labore et dolore magna aliqua.</p>
-			<p>By varying the distance of your face to your camera, the text in these paragraphs should be resizing automatically.  When you're close, it'll be smaller, and when you're far, it'll be larger.</p>
 
-			<p>I'm not sure if this is really the right behavior.  It could be that you're trying to get in close because you're having trouble reading from a distance, in which case you'd want the opposite behavior.</p>
+			<p>By varying the distance of your face to your camera, the text in these paragraphs should be resizing automatically.  When you're close, it'll be smaller, and when you're far, it'll be larger.  The idea is to keep the text a comfortable size for reading.</p>
+
+			<p>I'm not sure if this is really the right behavior.  It could be that you're trying to get in close because you're having trouble reading from a distance, in which case you'd want the opposite behavior, or no behavior.</p>
+
 			<p>I'm also not sure what the appropriate level of granularity is.  I'd imagine that around 5 or so different levels is plenty, but the user should probably be able to configure that sort of thing.</p>
+
 			<p>I'm using a 2 second animation to move between different zoom levels right now.  It seems choppy, but it might just be because my computer's pretty old, face detection is fairly processor intensive, and I'm testing with 2 zoom level buckets, which are very different in size.</p>
+
+			<p>Addendum: Testing with smaller steps, the effect is smoother, but still not silky.  It also seems somewhat improved with left aligned text, rather than centered.  The reflow seems to cost a lot.  Using CSS zoom is probably a better choice.</p>
 		</div>
 		<canvas id="output"></canvas>
 		<script src="ccv.js"></script>
